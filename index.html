@@ -2,173 +2,179 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Malla Interactiva</title>
+<title>Malla Ingeniería Civil Industrial</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f8f8f8; padding: 20px; }
-  .malla { display: flex; flex-wrap: wrap; gap: 20px; }
-  .semestre { flex: 1; min-width: 200px; margin-bottom: 20px; display: flex; flex-direction: column; background: #eef; padding: 10px; border-radius: 8px; }
-  .titulo-semestre { font-weight: bold; margin-bottom: 10px; text-align: center; color: #004080; }
-  .ramos { display: flex; flex-direction: column; gap: 10px; }
-  .ramo {
-    width: 100%; padding: 10px; text-align: center;
-    border: 1px solid #bbb; border-radius: 5px;
-    background-color: #d0e8f2; /* azul verdoso claro */
-    cursor: pointer; user-select: none;
-    transition: all 0.3s;
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
   }
-  .aprobado {
-    background-color: #2e8b57; /* verde */
-    text-decoration: line-through;
-    color: #fff;
+  h1 {
+    text-align: center;
+  }
+  .malla {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  .semestre {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 150px;
+    word-wrap: break-word;
+  }
+  .semestre-title {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .ramo {
+    padding: 5px;
+    cursor: pointer;
+    color: black;
+    border-radius: 4px;
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
   }
   .bloqueado {
-    background-color: #c0c0c0; /* gris */
-    cursor: not-allowed;
-    color: #666;
+    background-color: gray;
+    color: white;
+  }
+  .desbloqueado {
+    background-color: #a8dadc;
+  }
+  .aprobado {
+    text-decoration: line-through;
+    background-color: #a8dadc;
   }
 </style>
 </head>
 <body>
-
-<h1>Malla Interactiva Ingeniería Civil Industrial</h1>
-
-<div id="malla" class="malla"></div>
+<h1>Malla Ingeniería Civil Industrial</h1>
+<div class="malla" id="malla"></div>
 
 <script>
-const ramos = [
-  { id: 'algebra', nombre: 'Álgebra y trigonometría', semestre: 1 },
-  { id: 'calculo_diff', nombre: 'Cálculo diferencial', semestre: 1 },
-  { id: 'quimica', nombre: 'Química general', semestre: 1 },
-  { id: 'intro', nombre: 'Introducción a la ingeniería industrial', semestre: 1 },
-  { id: 'formacion1', nombre: 'Formación integral institucional', semestre: 1 },
+const ramos = {
+  "Álgebra y trigonometría": [],
+  "Cálculo diferencial": [],
+  "Química general": [],
+  "Introducción a la ingeniería industrial": [],
+  "Formación integral institucional 1": [],
+  "Formación integral institucional 2": [],
+  "Álgebra lineal": ["Álgebra y trigonometría"],
+  "Cálculo integral": ["Cálculo diferencial"],
+  "Física mecánica": ["Álgebra y trigonometría", "Cálculo diferencial"],
+  "Software para ingeniería industrial": [],
+  "Formación integral institucional 3": [],
+  "Taller de emprendimiento": [],
+  "Cálculo multivariable": ["Cálculo integral"],
+  "Estadística": ["Cálculo integral"],
+  "Electromagnetismo": ["Física mecánica"],
+  "Algoritmo y programación para ingeniería industrial": [],
+  "Formación integral extra programática": [],
+  "Inglés básico": [],
+  "Ecuaciones diferenciales": ["Cálculo multivariable"],
+  "Teoría de sistemas": [],
+  "Contabilidad y costos": [],
+  "Electrotecnia": ["Electromagnetismo"],
+  "Termodinámica": ["Física mecánica"],
+  "Inglés intermedio": [],
+  "Taller de ciencias básicas": [],
+  "Métodos de producción": ["Contabilidad y costos"],
+  "Gestión estratégica": ["Teoría de sistemas"],
+  "Microeconomía": [],
+  "Mecánica de sólidos y fluidos": ["Física mecánica"],
+  "Inferencia estadística": ["Estadística"],
+  "Inglés avanzado": [],
+  "Modelamiento de sistemas informáticos": ["Algoritmo y programación para ingeniería industrial"],
+  "Comportamiento organizacional": [],
+  "Optimización lineal": ["Álgebra lineal"],
+  "Finanzas": ["Contabilidad y costos"],
+  "Electivo profesional I": [],
+  "Formación integral institucional 4": [],
+  "Taller de ciencias de la ingeniería": [],
+  "Gestión de operaciones": ["Métodos de producción"],
+  "Gestión de servicios": [],
+  "Optimización no lineal": ["Optimización lineal"],
+  "Evaluación de proyectos": ["Finanzas"],
+  "Electivo profesional II": [],
+  "Gestión de calidad": [],
+  "Práctica profesional I": [],
+  "Econometría": ["Inferencia estadística"],
+  "Gestión de la innovación": [],
+  "Marketing": [],
+  "Electivo profesional III": [],
+  "Formación integral institucional 5": [],
+  "Taller de sistemas productivos": [],
+  "Legislación laboral y ambiental": [],
+  "Logística integral": ["Gestión de operaciones"],
+  "Simulación de procesos": ["Optimización no lineal"],
+  "Formulación y preparación de proyectos": ["Evaluación de proyectos"],
+  "Electivo profesional IV": [],
+  "Taller de proyecto de emprendimiento": [],
+  "Práctica profesional II": [],
+  "Inclusión al ambiente laboral desde la ingeniería industrial": [],
+  "Seminario de titulación": [],
+  "Electivo profesional V": [],
+  "Formación integral institucional 6": []
+};
 
-  { id: 'algebra_lineal', nombre: 'Álgebra lineal', semestre: 2, prereqs: ['algebra'] },
-  { id: 'calculo_integral', nombre: 'Cálculo integral', semestre: 2, prereqs: ['calculo_diff'] },
-  { id: 'fisica', nombre: 'Física mecánica', semestre: 2, prereqs: ['algebra', 'calculo_diff'] },
-  { id: 'software', nombre: 'Software para ingeniería industrial', semestre: 2 },
-  { id: 'formacion2', nombre: 'Formación integral institucional', semestre: 2 },
-  { id: 'taller_emprend', nombre: 'Taller de emprendimiento', semestre: 2 },
-
-  { id: 'multivariable', nombre: 'Cálculo multivariable', semestre: 3, prereqs: ['calculo_integral'] },
-  { id: 'estadistica', nombre: 'Estadística', semestre: 3, prereqs: ['calculo_integral'] },
-  { id: 'electromagnetismo', nombre: 'Electromagnetismo', semestre: 3, prereqs: ['fisica'] },
-  { id: 'algoritmo', nombre: 'Algoritmo y programación para ingeniería industrial', semestre: 3 },
-  { id: 'formacion3', nombre: 'Formación integral extra programática', semestre: 3 },
-  { id: 'ingles_basico', nombre: 'Inglés básico', semestre: 3 },
-
-  { id: 'ecuaciones', nombre: 'Ecuaciones diferenciales', semestre: 4, prereqs: ['multivariable'] },
-  { id: 'teoria_sistemas', nombre: 'Teoría de sistemas', semestre: 4 },
-  { id: 'contabilidad', nombre: 'Contabilidad y costos', semestre: 4 },
-  { id: 'electrotecnia', nombre: 'Electrotecnia', semestre: 4, prereqs: ['electromagnetismo'] },
-  { id: 'termodinamica', nombre: 'Termodinámica', semestre: 4, prereqs: ['fisica'] },
-  { id: 'ingles_intermedio', nombre: 'Inglés intermedio', semestre: 4 },
-  { id: 'taller_cb', nombre: 'Taller de ciencias básicas', semestre: 4 },
-
-  { id: 'metodos_produccion', nombre: 'Métodos de producción', semestre: 5, prereqs: ['contabilidad'] },
-  { id: 'gestion_estrategica', nombre: 'Gestión estratégica', semestre: 5, prereqs: ['teoria_sistemas'] },
-  { id: 'microeconomia', nombre: 'Microeconomía', semestre: 5 },
-  { id: 'mecanica', nombre: 'Mecánica de sólidos y fluidos', semestre: 5, prereqs: ['fisica'] },
-  { id: 'inferencia', nombre: 'Inferencia estadística', semestre: 5, prereqs: ['estadistica'] },
-  { id: 'ingles_avanzado', nombre: 'Inglés avanzado', semestre: 5 },
-
-  { id: 'modelamiento', nombre: 'Modelamiento de sistemas informáticos', semestre: 6, prereqs: ['algoritmo'] },
-  { id: 'comportamiento', nombre: 'Comportamiento organizacional', semestre: 6 },
-  { id: 'opt_lineal', nombre: 'Optimización lineal', semestre: 6, prereqs: ['algebra_lineal'] },
-  { id: 'finanzas', nombre: 'Finanzas', semestre: 6, prereqs: ['contabilidad'] },
-  { id: 'electivo1', nombre: 'Electivo profesional I', semestre: 6 },
-  { id: 'formacion4', nombre: 'Formación integral institucional', semestre: 6 },
-  { id: 'taller_ci', nombre: 'Taller de ciencias de la ingeniería', semestre: 6 },
-
-  { id: 'gestion_op', nombre: 'Gestión de operaciones', semestre: 7, prereqs: ['metodos_produccion'] },
-  { id: 'gestion_servicios', nombre: 'Gestión de servicios', semestre: 7 },
-  { id: 'opt_no_lineal', nombre: 'Optimización no lineal', semestre: 7, prereqs: ['opt_lineal'] },
-  { id: 'eval_proyectos', nombre: 'Evaluación de proyectos', semestre: 7, prereqs: ['finanzas'] },
-  { id: 'electivo2', nombre: 'Electivo profesional II', semestre: 7 },
-  { id: 'gestion_calidad', nombre: 'Gestión de calidad', semestre: 7 },
-  { id: 'practica1', nombre: 'Práctica profesional I', semestre: 7 },
-
-  { id: 'econometria', nombre: 'Econometría', semestre: 8, prereqs: ['inferencia'] },
-  { id: 'gestion_innovacion', nombre: 'Gestión de la innovación', semestre: 8 },
-  { id: 'marketing', nombre: 'Marketing', semestre: 8 },
-  { id: 'electivo3', nombre: 'Electivo profesional III', semestre: 8 },
-  { id: 'formacion5', nombre: 'Formación integral institucional', semestre: 8 },
-  { id: 'taller_sp', nombre: 'Taller de sistemas productivos', semestre: 8 },
-
-  { id: 'legislacion', nombre: 'Legislación laboral y ambiental', semestre: 9 },
-  { id: 'logistica', nombre: 'Logística integral', semestre: 9, prereqs: ['gestion_op'] },
-  { id: 'simulacion', nombre: 'Simulación de procesos', semestre: 9, prereqs: ['opt_no_lineal'] },
-  { id: 'formulacion', nombre: 'Formulación y preparación de proyectos', semestre: 9, prereqs: ['eval_proyectos'] },
-  { id: 'electivo4', nombre: 'Electivo profesional IV', semestre: 9 },
-  { id: 'taller_emprend2', nombre: 'Taller de proyecto de emprendimiento', semestre: 9 },
-  { id: 'practica2', nombre: 'Práctica profesional II', semestre: 9 },
-
-  { id: 'inclusion', nombre: 'Inclusión al ambiente laboral desde la ingeniería industrial', semestre: 10 },
-  { id: 'seminario', nombre: 'Seminario de titulación', semestre: 10 },
-  { id: 'electivo5', nombre: 'Electivo profesional V', semestre: 10 },
-  { id: 'formacion6', nombre: 'Formación integral institucional', semestre: 10 },
+const semestres = [
+  ["Álgebra y trigonometría", "Cálculo diferencial", "Química general", "Introducción a la ingeniería industrial", "Formación integral institucional 1", "Formación integral institucional 2"],
+  ["Álgebra lineal", "Cálculo integral", "Física mecánica", "Software para ingeniería industrial", "Formación integral institucional 3", "Taller de emprendimiento"],
+  ["Cálculo multivariable", "Estadística", "Electromagnetismo", "Algoritmo y programación para ingeniería industrial", "Formación integral extra programática", "Inglés básico"],
+  ["Ecuaciones diferenciales", "Teoría de sistemas", "Contabilidad y costos", "Electrotecnia", "Termodinámica", "Inglés intermedio", "Taller de ciencias básicas"],
+  ["Métodos de producción", "Gestión estratégica", "Microeconomía", "Mecánica de sólidos y fluidos", "Inferencia estadística", "Inglés avanzado"],
+  ["Modelamiento de sistemas informáticos", "Comportamiento organizacional", "Optimización lineal", "Finanzas", "Electivo profesional I", "Formación integral institucional 4", "Taller de ciencias de la ingeniería"],
+  ["Gestión de operaciones", "Gestión de servicios", "Optimización no lineal", "Evaluación de proyectos", "Electivo profesional II", "Gestión de calidad", "Práctica profesional I"],
+  ["Econometría", "Gestión de la innovación", "Marketing", "Electivo profesional III", "Formación integral institucional 5", "Taller de sistemas productivos"],
+  ["Legislación laboral y ambiental", "Logística integral", "Simulación de procesos", "Formulación y preparación de proyectos", "Electivo profesional IV", "Taller de proyecto de emprendimiento", "Práctica profesional II"],
+  ["Inclusión al ambiente laboral desde la ingeniería industrial", "Seminario de titulación", "Electivo profesional V", "Formación integral institucional 6"]
 ];
 
 const estado = {};
+Object.keys(ramos).forEach(r => estado[r] = ramos[r].length === 0 ? "desbloqueado" : "bloqueado");
 
-function crearMalla() {
-  const mallaDiv = document.getElementById('malla');
-  for (let s = 1; s <= 10; s++) {
-    const semestreDiv = document.createElement('div');
-    semestreDiv.className = 'semestre';
+const malla = document.getElementById("malla");
+semestres.forEach((ramosSem, i) => {
+  const col = document.createElement("div");
+  col.className = "semestre";
+  const title = document.createElement("div");
+  title.className = "semestre-title";
+  title.textContent = `${i + 1}° semestre`;
+  col.appendChild(title);
 
-    const titulo = document.createElement('div');
-    titulo.className = 'titulo-semestre';
-    titulo.textContent = `${s}° Semestre`;
-    semestreDiv.appendChild(titulo);
+  ramosSem.forEach(r => {
+    const div = document.createElement("div");
+    div.className = `ramo ${estado[r]}`;
+    div.textContent = r;
+    div.onclick = () => toggleRamo(r, div);
+    col.appendChild(div);
+  });
+  malla.appendChild(col);
+});
 
-    const ramosDiv = document.createElement('div');
-    ramosDiv.className = 'ramos';
+function toggleRamo(ramo, div) {
+  if (estado[ramo] !== "desbloqueado") return;
 
-    ramos.filter(r => r.semestre === s).forEach(ramo => {
-      const div = document.createElement('div');
-      div.className = 'ramo';
-      div.id = ramo.id;
-      div.textContent = ramo.nombre;
-      div.onclick = () => toggleRamo(ramo.id);
-      estado[ramo.id] = false;
-      ramosDiv.appendChild(div);
-    });
+  estado[ramo] = "aprobado";
+  div.classList.add("aprobado");
+  div.classList.remove("desbloqueado");
 
-    semestreDiv.appendChild(ramosDiv);
-    mallaDiv.appendChild(semestreDiv);
-  }
-  actualizarEstados();
-}
-
-function actualizarEstados() {
-  ramos.forEach(ramo => {
-    const div = document.getElementById(ramo.id);
-    if (!div) return;
-    const prereqsCumplidos = !ramo.prereqs || ramo.prereqs.every(pr => estado[pr]);
-    if (!estado[ramo.id]) {
-      if (!prereqsCumplidos) {
-        div.classList.add('bloqueado');
-        div.onclick = null;
-      } else {
-        div.classList.remove('bloqueado');
-        div.onclick = () => toggleRamo(ramo.id);
+  Object.keys(ramos).forEach(r => {
+    if (estado[r] === "bloqueado") {
+      const pre = ramos[r];
+      if (pre.every(p => estado[p] === "aprobado")) {
+        estado[r] = "desbloqueado";
+        const nodo = [...document.querySelectorAll(".ramo")].find(el => el.textContent === r);
+        nodo.classList.remove("bloqueado");
+        nodo.classList.add("desbloqueado");
       }
-      div.classList.remove('aprobado');
-    } else {
-      div.classList.remove('bloqueado');
-      div.classList.add('aprobado');
     }
   });
 }
-
-function toggleRamo(id) {
-  estado[id] = !estado[id];
-  actualizarEstados();
-}
-
-crearMalla();
 </script>
-
 </body>
 </html>
