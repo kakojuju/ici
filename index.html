@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malla Interactiva</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f8f8f8; padding: 20px; }
+  .semestre { margin-bottom: 20px; }
+  .titulo-semestre { font-weight: bold; margin-bottom: 10px; }
+  .ramos { display: flex; flex-direction: column; gap: 10px; }
+  .ramo {
+    width: 250px; padding: 10px; text-align: center;
+    border: 1px solid #bbb; border-radius: 5px;
+    background-color: #b3d9ff; /* azul medio */
+    cursor: pointer; user-select: none;
+    transition: all 0.3s;
+  }
+  .aprobado {
+    background-color: #006400; /* verde fuerte */
+    text-decoration: line-through;
+    color: #fff;
+  }
+  .bloqueado {
+    background-color: #a9a9a9; /* gris más oscuro */
+    cursor: not-allowed;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+
+<h1>Malla Interactiva Ingeniería Industrial</h1>
+
+<div id="malla"></div>
+
+<script>
+const ramos = [/* igual que antes, lista completa */];
+
+const estado = {};
+
+function crearMalla() {
+  const mallaDiv = document.getElementById('malla');
+  for (let s = 1; s <= 10; s++) {
+    const semestreDiv = document.createElement('div');
+    semestreDiv.className = 'semestre';
+    semestreDiv.innerHTML = `<div class="titulo-semestre">${s}° Semestre</div>`;
+    const ramosDiv = document.createElement('div');
+    ramosDiv.className = 'ramos';
+
+    ramos.filter(r => r.semestre === s).forEach(ramo => {
+      const div = document.createElement('div');
+      div.className = 'ramo';
+      div.id = ramo.id;
+      div.textContent = ramo.nombre;
+      div.onclick = () => toggleRamo(ramo.id);
+      estado[ramo.id] = false;
+      ramosDiv.appendChild(div);
+    });
+
+    semestreDiv.appendChild(ramosDiv);
+    mallaDiv.appendChild(semestreDiv);
+  }
+  actualizarEstados();
+}
+
+function actualizarEstados() {
+  ramos.forEach(ramo => {
+    const div = document.getElementById(ramo.id);
+    const prereqsCumplidos = !ramo.prereqs || ramo.prereqs.every(pr => estado[pr]);
+    if (!estado[ramo.id]) {
+      if (!prereqsCumplidos) {
+        div.classList.add('bloqueado');
+        div.onclick = null;
+      } else {
+        div.classList.remove('bloqueado');
+        div.onclick = () => toggleRamo(ramo.id);
+      }
+      div.classList.remove('aprobado');
+    } else {
+      div.classList.remove('bloqueado');
+      div.classList.add('aprobado');
+    }
+  });
+}
+
+function toggleRamo(id) {
+  estado[id] = !estado[id];
+  actualizarEstados();
+}
+
+crearMalla();
+</script>
+
+</body>
+</html>
